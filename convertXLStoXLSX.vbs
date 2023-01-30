@@ -1,11 +1,6 @@
 ' this file does NOT contain any company confidential information
 ' this is a generic macro to convert xls files to xlsx
 
-Sub Convert_Multiple_Xls_To_Xlsx()
-
-Application.ScreenUpdating = False
-Application.DisplayAlerts = False
-
 
 Dim InputXlsFile As String
 Dim MyOpenedXlsFile As Workbook
@@ -42,9 +37,5 @@ End If
 
 
 Wend
-
-
-
-End Sub
 
 

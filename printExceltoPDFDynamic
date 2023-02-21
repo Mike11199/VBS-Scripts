@@ -1,0 +1,97 @@
+
+Public Sub Print_Sheets_to_PDF()
+
+   'DOES NOT CONTAIN ANY CONFIDENTIAL COMPANY INFORMATION - GENERIC MACRO TO PRINT EXCEL SHEETS TO PDF FROM EXCEL FILES MEETING CERTAIN CRITERIA
+
+    Dim folder As String, filename As String
+    Dim destinationWorkbook As Workbook
+    Dim thisSheetName As String
+    
+    Dim continue As Variant
+    Dim LastRow23 As Variant
+    
+    MsgBox ("This macro will print each claim sheet to PDF" & vbNewLine & vbNewLine & _
+    "This macro can take 5 minutes.  Please wait until a pop up displays indicating the macro has finished.")
+    
+    continue = MsgBox(Prompt:="Warning!  Make sure this macro is run from a folder with ONLY the .xlsm files you want to print from.  OR else this will cycle through ALL files with the specified criteria." & vbNewLine & vbNewLine & _
+    "Click YES to continue, or NO to cancel the macro.", Buttons:=vbQuestion + vbYesNo + vbDefaultButton2)
+    
+    If continue = vbNo Then
+        MsgBox ("Macro cancelled!")
+        End
+    End If
+    
+    
+    
+    folder = ActiveWorkbook.Path & "\"
+    thisSheetName = ActiveWorkbook.Name
+       
+    filename = Dir(folder & "*.xlsm", vbNormal)
+    While Len(filename) <> 0
+
+        
+
+    If filename <> thisSheetName Then
+    If InStr(filename, "FILESTRING1") Or InStr(filename, "FILESTRING2") Or InStr(filename, "FILESTRING3") Then
+    
+
+        Set destinationWorkbook = Workbooks.Open(folder & filename)
+
+                
+                If InStr(filename, "FILESTRING1") Then
+                    destinationWorkbook.Sheets("SHEETNAME1").Activate
+                 End If
+                 
+                                 
+                If InStr(filename, "FILESTRING2") Then
+                    destinationWorkbook.Sheets("SHEETNAME2").Activate
+                 End If
+                 
+                                 
+                If InStr(filename, "FILESTRING3") Then
+                    destinationWorkbook.Sheets("SHEETNAME3").Activate
+                 End If
+                 
+                Thissheet = ActiveSheet.Name
+                ThisFile = Left(ActiveWorkbook.Name, Len(ActiveWorkbook.Name) - 5)
+                PathName = ActiveWorkbook.Path
+                SvAs = PathName & "\" & ThisFile & ".pdf"
+                LastRow23 = Cells(Rows.Count, 5).End(xlUp).Row
+                
+                
+                'THIS SECTION DYNAMICALLY ADJUSTS THE PRINT PAGE LAYOUT SO THAT ALL DATA IS PRINTED CORECTLY DYNAMICALLY
+                With ActiveSheet.PageSetup
+                     .Zoom = False
+                    .FitToPagesWide = 1
+                    .FitToPagesTall = False
+                    .Orientation = xlLandscape
+                    .PrintArea = "$A$1:$P$" & LastRow23 + 2
+                    .FooterMargin = Application.InchesToPoints(0.2)
+                    .HeaderMargin = Application.InchesToPoints(0.2)
+                    .LeftMargin = Application.InchesToPoints(0.2)
+                    .RightMargin = Application.InchesToPoints(0.2)
+                    .TopMargin = Application.InchesToPoints(0.2)
+                    .BottomMargin = Application.InchesToPoints(0.2)
+                    
+                    
+                End With
+                
+                
+                ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, filename:=SvAs, Quality:=xlQualityStandard, IncludeDocProperties:=False, IgnorePrintAreas:=False, OpenAfterPublish:=True
+                
+                
+                
+                
+                destinationWorkbook.Close True
+                
+        
+   End If
+   End If
+        filename = Dir()  ' Get next matching file
+        
+    Wend
+
+MsgBox ("Finished printing pages to PDF.")
+
+End Sub
+
